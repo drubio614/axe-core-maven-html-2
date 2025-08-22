@@ -61,7 +61,7 @@ public class CrossBrowserAxeTest {
     public void testPageAccessibility() {
         System.out.println("Running test for " + browser + " on URL: " + url);
         driver.get(url);
-        
+
         try {
             AxeBuilder axeBuilder = new AxeBuilder();
             Results axeResults = axeBuilder.analyze(driver);

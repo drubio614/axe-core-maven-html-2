@@ -66,6 +66,7 @@
                     <includes>
                         <include>com/yourcompany/axtest/LiveAxeCoreTest.java</include>
                         <include>com/yourcompany/axtest/BookYourTripTest.java</include>
+                        <include>com/yourcompany/axtest/CrossBrowserAxeTest.java</include>
                         <include>com/deque/html/axecore/selenium/*.java</include>
                     </includes>
                 </configuration>
