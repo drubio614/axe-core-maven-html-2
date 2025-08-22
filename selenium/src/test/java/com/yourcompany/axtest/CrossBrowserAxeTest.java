@@ -57,14 +57,20 @@ public class CrossBrowserAxeTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
-    @Test
+@Test
     public void testPageAccessibility() {
         System.out.println("Running test for " + browser + " on URL: " + url);
         driver.get(url);
-
+        
         try {
             AxeBuilder axeBuilder = new AxeBuilder();
             Results axeResults = axeBuilder.analyze(driver);
+
+            if (!axeResults.getViolations().isEmpty()) {
+                System.out.println("Violations found: " + axeResults.getViolations().size());
+                // You can log the violation details here for more info
+                System.out.println(axeResults.getViolations());
+            }
 
             assertTrue("Accessibility violations found on " + url, axeResults.getViolations().isEmpty());
             System.out.println("No accessibility violations found for " + url + " on " + browser + ".");
@@ -75,11 +81,4 @@ public class CrossBrowserAxeTest {
             org.junit.Assert.fail("Test failed due to an exception.");
         }
     }
-
-    @After
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-}
+} 
