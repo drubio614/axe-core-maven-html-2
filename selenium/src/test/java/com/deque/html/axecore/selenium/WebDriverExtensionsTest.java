@@ -37,7 +37,7 @@ public class WebDriverExtensionsTest {
     Exception exception = null;
 
     String addr = "http://localhost:8001";
-    webDriver.get(addr + "/index.html");
+    webDriver.get("https://mnit-dot-a11y.github.io/identifying-components/information-status/");
 
     try {
       WebDriverExtensions.openAboutBlank(webDriver);
