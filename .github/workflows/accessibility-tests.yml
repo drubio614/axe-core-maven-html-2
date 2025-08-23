@@ -14,7 +14,7 @@ jobs:
     - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
-        java-version: '21'  # This is the crucial line
+        java-version: '21'  # <--- MUST BE '21' on GitHub
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
