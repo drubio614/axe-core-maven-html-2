@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 21
+    - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
-        java-version: '21'  # Crucial: Ensure this is '21'
+        java-version: '8'  # Set to Java 8
         distribution: 'temurin'
         cache: maven
     - name: Verify Java Version
-      run: java -version # Add this step to check the active Java version
+      run: java -version # Verify the active Java version
     - name: Build with Maven
       run: mvn -B package --file pom.xml
