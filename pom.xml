@@ -44,9 +44,11 @@
   </scm>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Set Java version to 1.8 for Java 8 compatibility -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <!-- Set Java version to 17 for compatibility with modern Selenium -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <!-- Define a property for the Java release version, used by compiler/javadoc plugins -->
+    <java.release.version>17</java.release.version>
   </properties>
   <build>
     <pluginManagement>
@@ -56,9 +58,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.13.0</version>
           <configuration>
-            <!-- Use source and target for Java 8 -->
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
+            <!-- Use <release> for JDK 9+ for consistent compilation -->
+            <release>${java.release.version}</release>
           </configuration>
         </plugin>
         <plugin>
@@ -66,8 +67,8 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.11.1</version>
           <configuration>
-            <!-- Use source for Javadoc with Java 8 -->
-            <source>${maven.compiler.source}</source>
+            <!-- Use <release> for Javadoc with JDK 9+ -->
+            <release>${java.release.version}</release>
           </configuration>
         </plugin>
       </plugins>
@@ -91,7 +92,6 @@
               </execution>
             </executions>
           </plugin>
-          <!-- Compiler and Javadoc plugins are managed in pluginManagement and inherit properties -->
           <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
