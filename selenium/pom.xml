@@ -30,8 +30,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <!-- Using <release> tag to inherit the Java version from the parent POM's properties.
+                         This is the recommended approach for JDK 9+ for consistent compilation. -->
+                    <release>${java.release.version}</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -62,9 +63,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
                 <configuration>
-                    <forkCount>0</forkCount> <!-- Crucial for preventing parallel execution issues -->
+                    <!-- forkCount=0 ensures tests run in the same JVM process,
+                         resolving "user data directory already in use" errors. -->
+                    <forkCount>0</forkCount>
                     <runOrder>alphabetical</runOrder>
                     <includes>
+                        <!-- Ensure all your test classes are included here -->
                         <include>com/yourcompany/axtest/LiveAxeCoreTest.java</include>
                         <include>com/yourcompany/axtest/BookYourTripTest.java</include>
                         <include>com/yourcompany/axtest/CrossBrowserAxeTest.java</include>
@@ -111,6 +115,7 @@
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- No need to define maven.compiler.source/target here, it's inherited from parent -->
     </properties>
 
     <reporting>
@@ -159,18 +164,12 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <source>21</source>
+                            <!-- Use <release> to inherit from parent -->
+                            <release>${java.release.version}</release>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.13.0</version>
-                        <configuration>
-                            <source>21</source>
-                            <target>21</target>
-                        </configuration>
-                    </plugin>
+                    <!-- The explicit maven-compiler-plugin was removed from here.
+                         It is now correctly managed in the <pluginManagement> section in the parent. -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
