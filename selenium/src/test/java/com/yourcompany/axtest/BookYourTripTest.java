@@ -31,7 +31,7 @@ public class BookYourTripTest {
     private String siteUrl;
 
     // IMPORTANT: Only one constructor is allowed for Parameterized tests,
-    // and it must match the parameters provided by the @Parameters method.
+    // and it must match the parddameters provided by the @Parameters method.
     public BookYourTripTest(String siteUrl) {
         this.siteUrl = siteUrl;
     }
