@@ -80,6 +80,8 @@ public class CrossBrowserAxeTest {
                 System.out.println(axeResults.getViolations());
             }
 
+            // This assertion is what is causing the test to fail.
+            // The test is working correctly by finding accessibility violations.
             assertTrue("Accessibility violations found on " + url, axeResults.getViolations().isEmpty());
             System.out.println("No accessibility violations found for " + url + " on " + browser + ".");
 

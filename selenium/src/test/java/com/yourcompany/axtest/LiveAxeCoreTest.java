@@ -3,62 +3,57 @@ package com.yourcompany.axtest;
 import com.deque.html.axecore.results.AxeRuntimeException;
 import com.deque.html.axecore.results.Results;
 import com.deque.html.axecore.results.Rule;
-import com.deque.html.axecore.results.Node; // Import Node class
+import com.deque.html.axecore.results.Node;
 import com.deque.html.axecore.selenium.AxeBuilder;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.After; // Changed from AfterClass
-import org.junit.Before; // Changed from BeforeClass
-import org.junit.Test;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.runner.RunWith; // New import
-import org.junit.runners.Parameterized; // New import
-import org.junit.runners.Parameterized.Parameters; // New import
-
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import com.fasterxml.jackson.databind.ObjectMapper; // Import Jackson ObjectMapper
-import java.io.File; // Required for file operations
-import java.io.FileWriter; // Required for writing to file
-import java.io.IOException; // Required for file operations
-import java.util.Arrays; // New import
-import java.util.Collection; // New import
-import java.util.List; // Required for List
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
-@RunWith(Parameterized.class) // Add this annotation
+@RunWith(Parameterized.class)
 public class LiveAxeCoreTest {
 
-    private WebDriver driver; // Changed to non-static
-    private String siteUrl; // New instance variable to hold the current site URL
+    private WebDriver driver;
+    private String siteUrl;
 
-    // Constructor to receive the siteUrl from the @Parameters method
     public LiveAxeCoreTest(String siteUrl) {
         this.siteUrl = siteUrl;
     }
 
-    // Method to provide the test data (list of sites)
-    @Parameters
+    @Parameterized.Parameters
     public static Collection<Object[]> siteProvider() {
         return Arrays.asList(new Object[][] {
             {"https://mn.gov/mnit/about-mnit/accessibility/office-of-inaccessibility.jsp"},
             {"https://mnit-dot-a11y.github.io/demos/basic-inaccessible-webpage/"},
             {"https://dequeuniversity.com/demo/mars"},
             {"https://dequeuniversity.com/demo/dream"}
-            // Add more URLs here as needed
         });
     }
 
-    @Before // Changed from @BeforeClass
-    public void setUp() { // Changed to non-static
+    @Before
+    public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--start-maximized");
+        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
     }
 
     @Test
-    public void runAxeCoreScanOnSite() { // Renamed for clarity, now uses siteUrl
+    public void runAxeCoreScanOnSite() {
         System.out.println("Navigating to page: " + siteUrl);
         try {
             driver.get(siteUrl);
@@ -73,7 +68,6 @@ public class LiveAxeCoreTest {
             if (!jsonReportDir.exists()) {
                 jsonReportDir.mkdirs();
             }
-            // Create a unique filename for the JSON report based on the URL
             String jsonFileName = siteUrl.replaceAll("[^a-zA-Z0-9.-]", "_") + "_axe_results.json";
             File jsonFile = new File(jsonReportDir, jsonFileName);
             mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, axeResults);
@@ -99,21 +93,17 @@ public class LiveAxeCoreTest {
                     violation.getNodes().forEach(node -> {
                         System.out.println("   HTML: " + node.getHtml());
                         System.out.println("   Target: " + node.getTarget());
-                        // Assuming getFailureSummary() still causes an error,
-                        // if `getFailureSummary()` is truly missing, consider removing or replacing
-                        // it with another relevant node property like `getHtml()` or `getTarget()`.
-                        // For demonstration, I'm keeping it as is, but if compilation fails here,
-                        // this line (and the corresponding HTML report line) should be reviewed/removed.
-                        System.out.println("   Failure Summary: " + node.getHtml()); // Changed to getHtml() for compatibility
+                        System.out.println("   Failure Summary: " + node.getHtml());
                         System.out.println("-----");
                     });
                     System.out.println("------------------------------------");
                 });
             }
 
-            // Assert that no accessibility violations were found
+            // Assert that no accessibility violations were found. This line will
+            // cause the test to fail if there are any violations.
             Assert.assertTrue("Accessibility violations found on " + siteUrl + ": " + axeResults.getViolations().toString(),
-                                  axeResults.getViolations().isEmpty());
+                    axeResults.getViolations().isEmpty());
 
         } catch (AxeRuntimeException e) {
             System.err.println("Axe-core runtime error during analysis of " + siteUrl + ": " + e.getMessage());
@@ -141,7 +131,7 @@ public class LiveAxeCoreTest {
         htmlContent.append("<head>\n");
         htmlContent.append("    <meta charset=\"UTF-8\">\n");
         htmlContent.append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
-        htmlContent.append("    <title>Accessibility Report for ").append(url).append("</title>\n");
+        htmlContent.append("    <title>Accessibility Report for ").append(escapeHtml(url)).append("</title>\n");
         htmlContent.append("    <style>\n");
         htmlContent.append("        body { font-family: Arial, sans-serif; margin: 20px; }\n");
         htmlContent.append("        h1 { color: #333; }\n");
@@ -194,7 +184,7 @@ public class LiveAxeCoreTest {
                 htmlContent.append("                </td>\n");
                 htmlContent.append("                <td>\n");
                 for (Node node : violation.getNodes()) {
-                    htmlContent.append("                    <p>").append(escapeHtml(node.getHtml())).append("</p>\n"); // Using getHtml() here
+                    htmlContent.append("                    <p>").append(escapeHtml(node.getHtml())).append("</p>\n");
                 }
                 htmlContent.append("                </td>\n");
                 htmlContent.append("                <td><a href=\"").append(violation.getHelpUrl()).append("\" target=\"_blank\">Learn More</a></td>\n");
@@ -213,7 +203,6 @@ public class LiveAxeCoreTest {
         if (!htmlReportDir.exists()) {
             htmlReportDir.mkdirs();
         }
-        // Create a unique filename for the HTML report based on the URL
         String htmlFileName = url.replaceAll("[^a-zA-Z0-9.-]", "_") + "_accessibility_report.html";
         File htmlFile = new File(htmlReportDir, htmlFileName);
         try (FileWriter writer = new FileWriter(htmlFile)) {
@@ -227,7 +216,7 @@ public class LiveAxeCoreTest {
      */
     private static String escapeHtml(String text) {
         if (text == null) {
-            return ""; // Handle null input gracefully
+            return "";
         }
         return text.replace("&", "&amp;")
                    .replace("<", "&lt;")
@@ -236,8 +225,8 @@ public class LiveAxeCoreTest {
                    .replace("'", "&#x27;");
     }
 
-    @After // Changed from @AfterClass
-    public void tearDown() { // Changed to non-static
+    @After
+    public void tearDown() {
         if (driver != null) {
             System.out.println("\nClosing browser after testing " + siteUrl + ".");
             driver.quit();
