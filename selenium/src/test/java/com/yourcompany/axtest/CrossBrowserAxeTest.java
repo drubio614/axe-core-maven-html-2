@@ -10,8 +10,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,20 +47,26 @@ public class CrossBrowserAxeTest {
     @Before
     public void setUp() {
         if ("chrome".equalsIgnoreCase(browser)) {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
             WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(chromeOptions);
         } else if ("firefox".equalsIgnoreCase(browser)) {
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+            firefoxOptions.addArguments("-headless");
             WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
+            driver = new FirefoxDriver(firefoxOptions);
         } else if ("edge".equalsIgnoreCase(browser)) {
+            EdgeOptions edgeOptions = new EdgeOptions();
+            edgeOptions.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
             WebDriverManager.edgedriver().setup();
-            driver = new EdgeDriver();
+            driver = new EdgeDriver(edgeOptions);
         }
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
-@Test
+    @Test
     public void testPageAccessibility() {
         System.out.println("Running test for " + browser + " on URL: " + url);
         driver.get(url);
@@ -68,7 +77,6 @@ public class CrossBrowserAxeTest {
 
             if (!axeResults.getViolations().isEmpty()) {
                 System.out.println("Violations found: " + axeResults.getViolations().size());
-                // You can log the violation details here for more info
                 System.out.println(axeResults.getViolations());
             }
 
@@ -81,4 +89,11 @@ public class CrossBrowserAxeTest {
             org.junit.Assert.fail("Test failed due to an exception.");
         }
     }
-} 
+
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
