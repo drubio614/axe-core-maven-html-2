@@ -30,9 +30,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <!-- Using <release> tag to inherit the Java version from the parent POM's properties.
-                         This is the recommended approach for JDK 9+ for consistent compilation. -->
                     <release>${java.release.version}</release>
+                    <!-- Explicitly set the compiler executable path -->
+                    <executable>${JAVA_HOME}/bin/javac</executable>
                 </configuration>
             </plugin>
             <plugin>
@@ -63,12 +63,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
                 <configuration>
-                    <!-- forkCount=0 ensures tests run in the same JVM process,
-                         resolving "user data directory already in use" errors. -->
                     <forkCount>0</forkCount>
                     <runOrder>alphabetical</runOrder>
                     <includes>
-                        <!-- Ensure all your test classes are included here -->
                         <include>com/yourcompany/axtest/LiveAxeCoreTest.java</include>
                         <include>com/yourcompany/axtest/BookYourTripTest.java</include>
                         <include>com/yourcompany/axtest/CrossBrowserAxeTest.java</include>
@@ -164,7 +161,6 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <!-- Use <release> to inherit from parent -->
                             <release>${java.release.version}</release>
                         </configuration>
                     </plugin>
