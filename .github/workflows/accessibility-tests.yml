@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4 # Updated to v4 for best practice
+    - uses: actions/checkout@v4
     - name: Set up JDK 21 and Maven
       uses: actions/setup-java@v4
       with:
@@ -37,14 +37,13 @@ jobs:
         echo "    </configuration>" >> ~/.m2/toolchains.xml
         echo "  </toolchain>" >> ~/.m2/toolchains.xml
         echo "</toolchains>" >> ~/.m2/toolchains.xml
-        echo "--- Content of ~/.m2/toolchains.xml ---" # Debugging step
-        cat ~/.m2/toolchains.xml # Print content for verification
-        echo "JAVA_HOME is: ${JAVA_HOME}" # Debugging JAVA_HOME value
+        echo "--- Content of ~/.m2/toolchains.xml ---"
+        cat ~/.m2/toolchains.xml
+        echo "JAVA_HOME is: ${JAVA_HOME}"
       shell: bash
     - name: Build with Maven (Running Tests)
-      # Removed -t ~/.m2/toolchains.xml as it's for settings.xml, not toolchains.xml.
-      # Maven should automatically pick up ~/.m2/toolchains.xml if it's correctly placed.
-      run: mvn -B package --file pom.xml
+      # Explicitly specify the toolchains file using -t
+      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml # <--- Added -t flag
     - name: List Surefire Reports Directory
       run: ls -R selenium/target/surefire-reports || echo "Surefire reports directory not found or empty."
       shell: bash
