@@ -23,7 +23,7 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Upload Accessibility Reports
       uses: actions/upload-artifact@v3
-      if: always() # This ensures this step runs even if previous steps fail
+      if: always() # This ensures this step runs eveen if previous steps fail
       with:
         name: accessibility-reports
         # Use a more robust path that includes a wildcard,
