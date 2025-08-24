@@ -70,7 +70,6 @@
                         <include>com/yourcompany/axtest/DestinationDreamTest.java</include> <!-- NEW: Added KboardNavigationTest -->
                         <include>com/yourcompany/axtest/DynamicContentTest.java</include>
                         <include>com/yourcompany/axtest/KeyboardNavigationTest.java</include>
-                        <include>com/deque/html/axecore/selenium/*.java</include>
                     </includes>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
