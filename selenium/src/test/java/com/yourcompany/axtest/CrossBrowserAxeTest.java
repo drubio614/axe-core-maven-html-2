@@ -89,7 +89,7 @@ public class CrossBrowserAxeTest {
             }
 
             // Uncomment the line below to make the test fail if violations are found
-            // assertTrue("Accessibility violations found on " + url, axeResults.getViolations().isEmpty());
+            // org.junit.Assert.assertTrue("Accessibility violations found on " + url, axeResults.getViolations().isEmpty());
 
         } catch (Exception e) {
             System.err.println("An error occurred during the test: " + e.getMessage());
