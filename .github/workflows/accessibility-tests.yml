@@ -22,8 +22,8 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Upload Accessibility Reports
-      uses: actions/upload-artifact@v3
-      if: always() # This ensures this step runs eveen if previous steps fail
+      uses: actions/upload-artifact@v4 # <--- CHANGED TO v4
+      if: always() # This ensures this step runs even if previous steps fail
       with:
         name: accessibility-reports
         # Use a more robust path that includes a wildcard,
