@@ -67,9 +67,10 @@
                         <include>com/yourcompany/axtest/LiveAxeCoreTest.java</include>
                         <include>com/yourcompany/axtest/BookYourTripTest.java</include>
                         <include>com/yourcompany/axtest/CrossBrowserAxeTest.java</include>
+                        <include>com/yourcompany/axtest/KeyboardNavigationTest.java</include> <!-- NEW: Added KeyboardNavigationTest -->
                         <include>com/deque/html/axecore/selenium/*.java</include>
                     </includes>
-                    <testFailureIgnore>true</testFailureIgnore> <!-- Temporarily ignore all test failures -->
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
         </plugins>
@@ -234,7 +235,7 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-safari-driver</artifactId>
             <version>4.22.0</version>
-            <scope>test</scope> <!-- Safari driver is   typically only needed for testing -->
+            <scope>test</scope> <!-- Safari driver is typically only needed for testing -->
         </dependency>
         <!-- Keep selenium-support as it's directly used by WebDriverInteractionHelper -->
         <dependency>
