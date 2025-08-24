@@ -15,13 +15,34 @@
 
     <build>
         <plugins>
+            <!-- Add the Maven Toolchains Plugin to explicitly select JDK 21 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>21</version>
+                            <vendor>temurin</vendor>
+                        </jdk>
+                    </toolchains>
+                </configuration>
+            </plugin>
             <!-- Explicitly configure maven-compiler-plugin for this module -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <!-- Ensure this module compiles with Java 21 -->
+                    <!-- Ensure this module compiles with Java 21 using the toolchain -->
                     <release>${java.release.version}</release>
                 </configuration>
             </plugin>
@@ -29,8 +50,7 @@
     </build>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- No need to define maven.compiler.source/target or java.release.version here, it's inherited from parent -->
+        <project.build.sourceEncoding>UTF-8</project.buildsourceEncoding>
     </properties>
 
     <dependencies>
@@ -39,9 +59,8 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.18.2</version> <!-- Use the same version as in selenium/pom.xml for consistency -->
+            <version>2.18.2</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Add any other specific dependencies for the utilities module here if needed -->
     </dependencies>
 </project>
