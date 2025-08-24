@@ -37,24 +37,22 @@ jobs:
         echo "    </configuration>" >> ~/.m2/toolchains.xml
         echo "  </toolchain>" >> ~/.m2/toolchains.xml
         echo "</toolchains>" >> ~/.m2/toolchains.xml
-        echo "--- Content of ~/.m2/toolchains.xml ---"
-        cat ~/.m2/toolchains.xml
-        echo "JAVA_HOME is: ${JAVA_HOME}"
       shell: bash
     - name: Build with Maven (Running Tests)
-      # Explicitly specify the toolchains file using -t
-      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml # <--- Added -t flag here
-    - name: List Surefire Reports Directory
+      # This command runs your tests, which in turn generate the HTML reports.
+      # The -t flag ensures Maven uses the correct Java 21 toolchain.
+      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml
+    - name: List Surefire Reports Directory # Debug step to verify test output
       run: ls -R selenium/target/surefire-reports || echo "Surefire reports directory not found or empty."
       shell: bash
       if: always()
-    - name: List Generated HTML Reports Directory
+    - name: List Generated HTML Reports Directory # Debug step to verify HTML reports
       run: ls -R selenium/target/a11y-html-reports || echo "HTML reports directory not found or empty."
       shell: bash
       if: always()
     - name: Upload Accessibility Reports
-      uses: actions/upload-artifact@v4
-      if: always()
+      uses: actions/upload-artifact@v4 # This uploads the reports as an artifact
+      if: always() # Ensures reports are uploaded even if tests fail
       with:
         name: accessibility-reports
-        path: selenium/target/a11y-html-reports/**
+        path: selenium/target/a11y-html-reports/** # Path to your generated HTML reports
