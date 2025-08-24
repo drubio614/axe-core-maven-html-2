@@ -67,9 +67,11 @@
                         <include>com/yourcompany/axtest/LiveAxeCoreTest.java</include>
                         <include>com/yourcompany/axtest/BookYourTripTest.java</include>
                         <include>com/yourcompany/axtest/CrossBrowserAxeTest.java</include>
-                        <include>com/yourcompany/axtest/DestinationDreamTest.java</include> <!-- NEW: Added KboardNavigationTest -->
+                        <include>com/yourcompany/axtest/DestinationDreamTest.java</include>
                         <include>com/yourcompany/axtest/DynamicContentTest.java</include>
                         <include>com/yourcompany/axtest/KeyboardNavigationTest.java</include>
+                        <!-- Removed <include>com/deque/html/axecore/selenium/*.java</include>
+                             to only run specific tests. -->
                     </includes>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
