@@ -69,8 +69,7 @@
                         <include>com/yourcompany/axtest/CrossBrowserAxeTest.java</include>
                         <include>com/deque/html/axecore/selenium/*.java</include>
                     </includes>
-                    <!-- Temporarily ignore test failures to allow the build to complete and upload reports -->
-                    <testFailureIgnore>true</testFailureIgnore>
+                    <testFailureIgnore>true</testFailureIgnore> <!-- Temporarily ignore all test failures -->
                 </configuration>
             </plugin>
         </plugins>
