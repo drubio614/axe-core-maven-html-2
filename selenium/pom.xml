@@ -234,7 +234,7 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-safari-driver</artifactId>
             <version>4.22.0</version>
-            <scope>test</scope> <!-- Safari driver is typically only needed for testing -->
+            <scope>test</scope> <!-- Safari driver is   typically only needed for testing -->
         </dependency>
         <!-- Keep selenium-support as it's directly used by WebDriverInteractionHelper -->
         <dependency>
