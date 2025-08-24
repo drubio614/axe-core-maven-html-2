@@ -7,16 +7,40 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [21] # <--- Changed to only run with Java 21
+        java: [21] # <--- Changed to only run with Java 21 for consistency
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK ${{ matrix.java }}
+      - name: Set up JDK ${{ matrix.java }} and Maven
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: "temurin"
+          cache: maven # This handles Maven caching
+
+      - name: Verify Java Version
+        run: java -version
+      - name: Verify Maven Version
+        run: mvn --version
+
+      - name: Create Maven Toolchains file # NEW STEP: Creates the toolchains.xml on the runner
+        run: |
+          mkdir -p ~/.m2
+          echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ~/.m2/toolchains.xml
+          echo "<toolchains>" >> ~/.m2/toolchains.xml
+          echo "  <toolchain>" >> ~/.m2/toolchains.xml
+          echo "    <type>jdk</type>" >> ~/.m2/toolchains.xml
+          echo "    <provides>" >> ~/.m2/toolchains.xml
+          echo "      <version>21</version>" >> ~/.m2/toolchains.xml
+          echo "      <vendor>temurin</vendor>" >> ~/.m2/toolchains.xml
+          echo "    </provides>" >> ~/.m2/toolchains.xml
+          echo "    <configuration>" >> ~/.m2/toolchains.xml
+          echo "      <jdkHome>${JAVA_HOME}</jdkHome>" >> ~/.m2/toolchains.xml
+          echo "    </configuration>" >> ~/.m2/toolchains.xml
+          echo "  </toolchain>" >> ~/.m2/toolchains.xml
+          echo "</toolchains>" >> ~/.m2/toolchains.xml
+        shell: bash
 
       - name: Cache npm dependencies
         uses: actions/cache@v4
@@ -36,8 +60,10 @@ jobs:
             maven-cache-v1-${{ runner.os }}-${{ matrix.java }}
 
       - name: Install Maven dependencies
+        # https://github.com/actions/cache#skipping-steps-based-on-cache-hit
         if: steps.maven-cache.outputs.cache-hit != 'true'
-        run: mvn clean install -DskipTests
+        # Explicitly pass toolchains.xml
+        run: mvn clean install -DskipTests -t ~/.m2/toolchains.xml
       - name: Install NPM dependencies
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: |
@@ -51,8 +77,32 @@ jobs:
     timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
+      - name: Set up JDK 21 and Maven # Need to set up JDK and Maven again for dependent jobs
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: "temurin"
+          cache: maven
+      - name: Create Maven Toolchains file # Recreate toolchains.xml for this job
+        run: |
+          mkdir -p ~/.m2
+          echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ~/.m2/toolchains.xml
+          echo "<toolchains>" >> ~/.m2/toolchains.xml
+          echo "  <toolchain>" >> ~/.m2/toolchains.xml
+          echo "    <type>jdk</type>" >> ~/.m2/toolchains.xml
+          echo "    <provides>" >> ~/.m2/toolchains.xml
+          echo "      <version>21</version>" >> ~/.m2/toolchains.xml
+          echo "      <vendor>temurin</vendor>" >> ~/.m2/toolchains.xml
+          echo "    </provides>" >> ~/.m2/toolchains.xml
+          echo "    <configuration>" >> ~/.m2/toolchains.xml
+          echo "      <jdkHome>${JAVA_HOME}</jdkHome>" >> ~/.m2/toolchains.xml
+          echo "    </configuration>" >> ~/.m2/toolchains.xml
+          echo "  </toolchain>" >> ~/.m2/toolchains.xml
+          echo "</toolchains>" >> ~/.m2/toolchains.xml
+        shell: bash
       - name: Maven compile licenses
-        run: mvn compile license:add-third-party
+        # Explicitly pass toolchains.xml
+        run: mvn compile license:add-third-party -t ~/.m2/toolchains.xml
       - name: Check Selenium licenses
         run: node scripts/license-check.js selenium/target/generated-sources/license/THIRD-PARTY.txt
       - name: Check Playwright licenses
@@ -67,6 +117,29 @@ jobs:
         java: [21] # <--- Changed to only run with Java 21
     steps:
       - uses: actions/checkout@v4
+      - name: Set up JDK ${{ matrix.java }} and Maven # Need to set up JDK and Maven again for dependent jobs
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: "temurin"
+          cache: maven
+      - name: Create Maven Toolchains file # Recreate toolchains.xml for this job
+        run: |
+          mkdir -p ~/.m2
+          echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ~/.m2/toolchains.xml
+          echo "<toolchains>" >> ~/.m2/toolchains.xml
+          echo "  <toolchain>" >> ~/.m2/toolchains.xml
+          echo "    <type>jdk</type>" >> ~/.m2/toolchains.xml
+          echo "    <provides>" >> ~/.m2/toolchains.xml
+          echo "      <version>21</version>" >> ~/.m2/toolchains.xml
+          echo "      <vendor>temurin</vendor>" >> ~/.m2/toolchains.xml
+          echo "    </provides>" >> ~/.m2/toolchains.xml
+          echo "    <configuration>" >> ~/.m2/toolchains.xml
+          echo "      <jdkHome>${JAVA_HOME}</jdkHome>" >> ~/.m2/toolchains.xml
+          echo "    </configuration>" >> ~/.m2/toolchains.xml
+          echo "  </toolchain>" >> ~/.m2/toolchains.xml
+          echo "</toolchains>" >> ~/.m2/toolchains.xml
+        shell: bash
       - uses: actions/cache@v4
         name: Restore npm cache
         id: npm-cache
@@ -86,7 +159,8 @@ jobs:
       - name: Start fixture server
         run: npm --prefix=playwright start &
       - name: Run Playwright tests
-        run: mvn test -q -pl playwright
+        # Explicitly pass toolchains.xml
+        run: mvn test -q -pl playwright -t ~/.m2/toolchains.xml
 
   selenium-tests:
     needs: [license-check, build]
@@ -98,6 +172,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+      - name: Set up JDK ${{ matrix.java }} and Maven # Need to set up JDK and Maven again for dependent jobs
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: "temurin"
+          cache: maven
+      - name: Create Maven Toolchains file # Recreate toolchains.xml for this job
+        run: |
+          mkdir -p ~/.m2
+          echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ~/.m2/toolchains.xml
+          echo "<toolchains>" >> ~/.m2/toolchains.xml
+          echo "  <toolchain>" >> ~/.m2/toolchains.xml
+          echo "    <type>jdk</type>" >> ~/.m2/toolchains.xml
+          echo "    <provides>" >> ~/.m2/toolchains.xml
+          echo "      <version>21</version>" >> ~/.m2/toolchains.xml
+          echo "      <vendor>temurin</vendor>" >> ~/.m2/toolchains.xml
+          echo "    </provides>" >> ~/.m2/toolchains.xml
+          echo "    <configuration>" >> ~/.m2/toolchains.xml
+          echo "      <jdkHome>${JAVA_HOME}</jdkHome>" >> ~/.m2/toolchains.xml
+          echo "    </configuration>" >> ~/.m2/toolchains.xml
+          echo "  </toolchain>" >> ~/.m2/toolchains.xml
+          echo "</toolchains>" >> ~/.m2/toolchains.xml
+        shell: bash
       - uses: actions/cache@v4
         name: Restore npm cache
         id: npm-cache
@@ -118,4 +215,5 @@ jobs:
         run: python -m http.server 8001 &
         working-directory: selenium/node_modules/axe-test-fixtures/fixtures
       - name: Run Selenium tests
-        run: mvn test -q -pl selenium
+        # Explicitly pass toolchains.xml
+        run: mvn test -q -pl selenium -t ~/.m2/toolchains.xml
