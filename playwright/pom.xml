@@ -10,6 +10,7 @@
     <version>4.10.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
+
   <name>Axe-core Playwright Java</name>
   <description>Axe-core Playwright java integration</description>
   <url>https://github.com/dequelabs/axe-core-maven-html</url>
@@ -222,12 +223,6 @@
                 </goals>
               </execution>
             </executions>
-            <configuration>
-              <gpgArguments>
-                <arg>--pinentry-mode</arg>
-                <arg>loopback</arg>
-              </gpgArguments>
-            </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -262,7 +257,7 @@
     <dependency>
       <groupId>com.microsoft.playwright</groupId>
       <artifactId>playwright</artifactId>
-      <version>1.49.0</version>
+      <version>1.49.0</version> <!-- Update this to a newer version -->
     </dependency>
     <!-- Overrides commons-codec used in httpclient for security reasons -->
     <dependency>
