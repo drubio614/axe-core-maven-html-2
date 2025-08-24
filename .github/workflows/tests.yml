@@ -10,7 +10,7 @@ jobs:
         java: [21] # <--- Changed to only run with Java 21 for consistency
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up JDK ${{ matrix.java }} and Maven
         uses: actions/setup-java@v4
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up JDK 21 and Maven # Need to set up JDK and Maven again for dependent jobs
         uses: actions/setup-java@v4
         with:
@@ -116,7 +116,7 @@ jobs:
       matrix:
         java: [21] # <--- Changed to only run with Java 21
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up JDK ${{ matrix.java }} and Maven # Need to set up JDK and Maven again for dependent jobs
         uses: actions/setup-java@v4
         with:
@@ -170,7 +170,7 @@ jobs:
       matrix:
         java: [21] # <--- Changed to only run with Java 21
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
       - name: Set up JDK ${{ matrix.java }} and Maven # Need to set up JDK and Maven again for dependent jobs
         uses: actions/setup-java@v4
