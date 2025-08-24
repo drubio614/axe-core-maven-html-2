@@ -22,7 +22,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <!-- Ensure this module compiles with Java 21 -->
-                    <release>21</release>
+                    <release>${java.release.version}</release>
                 </configuration>
             </plugin>
         </plugins>
@@ -34,6 +34,14 @@
     </properties>
 
     <dependencies>
-        <!-- Add any specific dependencies for the utilities module here if needed -->
+        <!-- Add Jackson Databind as a direct dependency for dequeutilites module.
+             This transitively includes jackson-annotations, which is required by its source code. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.18.2</version> <!-- Use the same version as in selenium/pom.xml for consistency -->
+            <scope>compile</scope>
+        </dependency>
+        <!-- Add any other specific dependencies for the utilities module here if needed -->
     </dependencies>
 </project>
