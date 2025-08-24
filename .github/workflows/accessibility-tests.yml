@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4 # Updated to v4 for best practice
     - name: Set up JDK 21 and Maven
       uses: actions/setup-java@v4
       with:
@@ -27,7 +27,7 @@ jobs:
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ~/.m2/toolchains.xml
         echo "<toolchains>" >> ~/.m2/toolchains.xml
         echo "  <toolchain>" >> ~/.m2/toolchains.xml
-        echo "    <type>jdk</type>" >> ~/.m2/toolchain.xml
+        echo "    <type>jdk</type>" >> ~/.m2/toolchains.xml
         echo "    <provides>" >> ~/.m2/toolchains.xml
         echo "      <version>21</version>" >> ~/.m2/toolchains.xml
         echo "      <vendor>temurin</vendor>" >> ~/.m2/toolchains.xml
@@ -37,14 +37,19 @@ jobs:
         echo "    </configuration>" >> ~/.m2/toolchains.xml
         echo "  </toolchain>" >> ~/.m2/toolchains.xml
         echo "</toolchains>" >> ~/.m2/toolchains.xml
+        echo "--- Content of ~/.m2/toolchains.xml ---" # Debugging step
+        cat ~/.m2/toolchains.xml # Print content for verification
+        echo "JAVA_HOME is: ${JAVA_HOME}" # Debugging JAVA_HOME value
       shell: bash
     - name: Build with Maven (Running Tests)
-      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml
-    - name: List Surefire Reports Directory # NEW DEBUG STEP
+      # Removed -t ~/.m2/toolchains.xml as it's for settings.xml, not toolchains.xml.
+      # Maven should automatically pick up ~/.m2/toolchains.xml if it's correctly placed.
+      run: mvn -B package --file pom.xml
+    - name: List Surefire Reports Directory
       run: ls -R selenium/target/surefire-reports || echo "Surefire reports directory not found or empty."
       shell: bash
       if: always()
-    - name: List Generated HTML Reports Directory # Existing debug step
+    - name: List Generated HTML Reports Directory
       run: ls -R selenium/target/a11y-html-reports || echo "HTML reports directory not found or empty."
       shell: bash
       if: always()
