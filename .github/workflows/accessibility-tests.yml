@@ -23,10 +23,9 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Upload Accessibility Reports
       uses: actions/upload-artifact@v3
+      if: always() # This ensures this step runs even if previous steps fail
       with:
         name: accessibility-reports
-        path: selenium/target/a11y-html-reports # Path to your generated HTML reports
-        # You can also include JSON reports if needed:
-        # path: |
-        #   selenium/target/a11y-html-reports
-        #   selenium/target/a11y-json-reports
+        # Use a more robust path that includes a wildcard,
+        # or ensure the directory exists before uploading.
+        path: selenium/target/a11y-html-reports/**
