@@ -27,7 +27,7 @@ jobs:
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ~/.m2/toolchains.xml
         echo "<toolchains>" >> ~/.m2/toolchains.xml
         echo "  <toolchain>" >> ~/.m2/toolchains.xml
-        echo "    <type>jdk</type>" >> ~/.m2/toolchains.xml
+        echo "    <type>jdk</type>" >> ~/.m2/toolchain.xml
         echo "    <provides>" >> ~/.m2/toolchains.xml
         echo "      <version>21</version>" >> ~/.m2/toolchains.xml
         echo "      <vendor>temurin</vendor>" >> ~/.m2/toolchains.xml
@@ -40,10 +40,14 @@ jobs:
       shell: bash
     - name: Build with Maven (Running Tests)
       run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml
-    - name: List Generated Reports Directory # NEW DEBUG STEP
-      run: ls -R selenium/target/a11y-html-reports || echo "Reports directory not found or empty."
+    - name: List Surefire Reports Directory # NEW DEBUG STEP
+      run: ls -R selenium/target/surefire-reports || echo "Surefire reports directory not found or empty."
       shell: bash
-      if: always() # Run this even if previous steps fail, for debugging
+      if: always()
+    - name: List Generated HTML Reports Directory # Existing debug step
+      run: ls -R selenium/target/a11y-html-reports || echo "HTML reports directory not found or empty."
+      shell: bash
+      if: always()
     - name: Upload Accessibility Reports
       uses: actions/upload-artifact@v4
       if: always()
