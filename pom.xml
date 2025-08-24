@@ -44,11 +44,11 @@
   </scm>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Set Java version to 17 for compatibility with modern Selenium -->
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <!-- Define a property for the Java release version, used by compiler/javadoc plugins -->
-    <java.release.version>17</java.release.version>
+    <!-- Define the Java release version for consistency across plugins -->
+    <java.release.version>21</java.release.version>
+    <!-- These are still good to have, but <release> takes precedence for compiler plugin -->
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
   <build>
     <pluginManagement>
@@ -58,8 +58,7 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.13.0</version>
           <configuration>
-            <!-- Use <release> for JDK 9+ for consistent compilation -->
-            <release>${java.release.version}</release>
+            <release>${java.release.version}</release> <!-- Use <release> for JDK 9+ -->
           </configuration>
         </plugin>
         <plugin>
@@ -67,8 +66,7 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.11.1</version>
           <configuration>
-            <!-- Use <release> for Javadoc with JDK 9+ -->
-            <release>${java.release.version}</release>
+            <release>${java.release.version}</release> <!-- Use <release> for JDK 9+ -->
           </configuration>
         </plugin>
       </plugins>

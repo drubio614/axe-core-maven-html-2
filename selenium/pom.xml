@@ -30,7 +30,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <!-- Inherit Java 17 release version from parent POM's properties -->
+                    <!-- Inherit Java 21 release version from parent POM's properties -->
                     <release>${java.release.version}</release>
                 </configuration>
             </plugin>
@@ -160,12 +160,10 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <!-- Inherit Java 17 release version from parent for Javadoc -->
+                            <!-- Inherit Java 21 release version from parent for Javadoc -->
                             <release>${java.release.version}</release>
                         </configuration>
                     </plugin>
-                    <!-- The explicit maven-compiler-plugin was removed from here.
-                         It is now correctly managed in the <pluginManagement> section in the parent. -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
