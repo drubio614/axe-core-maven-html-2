@@ -39,29 +39,14 @@ jobs:
         echo "</toolchains>" >> ~/.m2/toolchains.xml
       shell: bash
     
-    # --- Playwright Setup ---
-    - name: Install Playwright Browser Dependencies # Removed --with-deps
-      run: npx playwright install-deps
-      working-directory: playwright
-      shell: bash
-    - name: Install Node.js dependencies for Playwright
-      run: npm ci --prefix=playwright
-      shell: bash
-    - name: Start Playwright Fixture Server
-      run: npm --prefix=playwright start &
-      shell: bash
-    - name: Wait for Playwright server to start
-      run: sleep 5s
-      shell: bash
-
     # --- Selenium Setup ---
     - uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-    - name: Install Node.js dependencies for Selenium
+    - name: Install Node.js dependencies for Selenium # Needed for axe-test-fixtures
       run: npm ci --prefix=selenium
       shell: bash
-    - name: Start Selenium Fixture Server
+    - name: Start Selenium Fixture Server # Starts server for localhost:8001
       run: python -m http.server 8001 &
       working-directory: selenium/node_modules/axe-test-fixtures/fixtures
       shell: bash
@@ -69,14 +54,14 @@ jobs:
       run: sleep 5s
       shell: bash
     
-    - name: Build with Maven (Running Tests)
+    - name: Build with Maven (Running Selenium Tests)
       run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml
     - name: List Surefire Reports Directory
       run: ls -R selenium/target/surefire-reports || echo "Surefire reports directory not found or empty."
       shell: bash
       if: always()
     - name: List Generated HTML Reports Directory
-      run: ls -R selenium/target/a11y-html-reports || echo "HTML reports directory not found or empty."
+      run: ls -R target/a11y-html-reports || echo "HTML reports directory not found or empty." # <--- Corrected path
       shell: bash
       if: always()
     - name: Upload Accessibility Reports
@@ -84,4 +69,4 @@ jobs:
       if: always()
       with:
         name: accessibility-reports
-        path: selenium/target/a11y-html-reports/**
+        path: target/a11y-html-reports/** # <--- Corrected path
