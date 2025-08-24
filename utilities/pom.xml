@@ -22,7 +22,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <!-- Ensure this module compiles with Java 21 -->
-                    <release>${java.release.version}</release>
+                    <release>21</release>
                 </configuration>
             </plugin>
         </plugins>
