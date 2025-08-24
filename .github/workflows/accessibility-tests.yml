@@ -39,13 +39,14 @@ jobs:
         echo "</toolchains>" >> ~/.m2/toolchains.xml
       shell: bash
     
-    # --- Playwright Setup (already correct) ---
-    - name: Install Playwright Browser Dependencies
-      run: npx playwright install-deps --with-deps
+    # --- Playwright Setup ---
+    - name: Install Playwright Browser Dependencies # Removed --with-deps
+      run: npx playwright install-deps
       working-directory: playwright
       shell: bash
     - name: Install Node.js dependencies for Playwright
       run: npm ci --prefix=playwright
+      shell: bash
     - name: Start Playwright Fixture Server
       run: npm --prefix=playwright start &
       shell: bash
@@ -57,7 +58,7 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-    - name: Install Node.js dependencies for Selenium # NEW STEP: Install npm dependencies for selenium
+    - name: Install Node.js dependencies for Selenium
       run: npm ci --prefix=selenium
       shell: bash
     - name: Start Selenium Fixture Server
