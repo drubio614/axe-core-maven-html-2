@@ -43,7 +43,7 @@ jobs:
       shell: bash
     - name: Build with Maven (Running Tests)
       # Explicitly specify the toolchains file using -t
-      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml # <--- Added -t flag
+      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml # <--- Added -t flag here
     - name: List Surefire Reports Directory
       run: ls -R selenium/target/surefire-reports || echo "Surefire reports directory not found or empty."
       shell: bash
