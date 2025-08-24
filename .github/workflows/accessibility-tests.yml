@@ -39,11 +39,28 @@ jobs:
         echo "</toolchains>" >> ~/.m2/toolchains.xml
       shell: bash
     
+    # --- Playwright Setup (already correct) ---
+    - name: Install Playwright Browser Dependencies
+      run: npx playwright install-deps --with-deps
+      working-directory: playwright
+      shell: bash
+    - name: Install Node.js dependencies for Playwright
+      run: npm ci --prefix=playwright
+    - name: Start Playwright Fixture Server
+      run: npm --prefix=playwright start &
+      shell: bash
+    - name: Wait for Playwright server to start
+      run: sleep 5s
+      shell: bash
+
     # --- Selenium Setup ---
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.x' # Use a compatible Python version
-    - name: Start Selenium Fixture Server # Starts server for localhost:8001
+        python-version: '3.x'
+    - name: Install Node.js dependencies for Selenium # NEW STEP: Install npm dependencies for selenium
+      run: npm ci --prefix=selenium
+      shell: bash
+    - name: Start Selenium Fixture Server
       run: python -m http.server 8001 &
       working-directory: selenium/node_modules/axe-test-fixtures/fixtures
       shell: bash
@@ -51,7 +68,7 @@ jobs:
       run: sleep 5s
       shell: bash
     
-    - name: Build with Maven (Running Selenium Tests) # Only Selenium tests will run
+    - name: Build with Maven (Running Tests)
       run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml
     - name: List Surefire Reports Directory
       run: ls -R selenium/target/surefire-reports || echo "Surefire reports directory not found or empty."
