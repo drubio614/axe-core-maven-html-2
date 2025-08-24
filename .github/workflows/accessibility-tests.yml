@@ -11,20 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 21 and Maven # Combined step for clarity
-      uses: actions/setup-java@v4 # Using v4 of setup-java
+    - name: Set up JDK 21 and Maven
+      uses: actions/setup-java@v4
       with:
-        java-version: '21'  # Explicitly set to Java 21
+        java-version: '21'
         distribution: 'temurin'
-        cache: maven # This handles Maven caching, making setup-maven unnecessary
+        cache: maven
     - name: Verify Java Version
-      run: java -version # This step will confirm the active Java version in the logs
+      run: java -version
     - name: Verify Maven Version
-      run: mvn --version # This step will confirm the active Maven version
-    - name: Create Maven Toolchains file # This step is still needed for explicit toolchain configuration
+      run: mvn --version
+    - name: Create Maven Toolchains file
       run: |
         mkdir -p ~/.m2
-        echo "<toolchains>" > ~/.m2/toolchains.xml
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ~/.m2/toolchains.xml
+        echo "<toolchains>" >> ~/.m2/toolchains.xml
         echo "  <toolchain>" >> ~/.m2/toolchains.xml
         echo "    <type>jdk</type>" >> ~/.m2/toolchains.xml
         echo "    <provides>" >> ~/.m2/toolchains.xml
@@ -37,11 +38,11 @@ jobs:
         echo "  </toolchain>" >> ~/.m2/toolchains.xml
         echo "</toolchains>" >> ~/.m2/toolchains.xml
       shell: bash
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Build with Maven (Running Tests) # Updated step name
+      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml # <--- -DskipTests removed
     - name: Upload Accessibility Reports
-      uses: actions/upload-artifact@v4 # Using v4 of upload-artifact
-      if: always() # This ensures this step runs even if previous steps fail
+      uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: accessibility-reports
         path: selenium/target/a11y-html-reports/**
