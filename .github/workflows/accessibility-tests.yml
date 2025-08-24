@@ -21,3 +21,12 @@ jobs:
       run: java -version # This step will confirm the active Java version in the logs
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Upload Accessibility Reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: accessibility-reports
+        path: selenium/target/a11y-html-reports # Path to your generated HTML reports
+        # You can also include JSON reports if needed:
+        # path: |
+        #   selenium/target/a11y-html-reports
+        #   selenium/target/a11y-json-reports
