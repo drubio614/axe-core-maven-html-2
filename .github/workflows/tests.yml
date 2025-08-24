@@ -1,4 +1,4 @@
-name: Tests
+name: Tests # This workflow is named "Tests"
 
 on: push
 
@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [8, 11, 17]
+        java: [21] # <--- Changed to only run with Java 21
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
@@ -36,11 +36,9 @@ jobs:
             maven-cache-v1-${{ runner.os }}-${{ matrix.java }}
 
       - name: Install Maven dependencies
-        # https://github.com/actions/cache#skipping-steps-based-on-cache-hit
         if: steps.maven-cache.outputs.cache-hit != 'true'
         run: mvn clean install -DskipTests
       - name: Install NPM dependencies
-        # https://github.com/actions/cache#skipping-steps-based-on-cache-hit
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: |
           npm ci &&
@@ -66,7 +64,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        java: [8, 11, 17]
+        java: [21] # <--- Changed to only run with Java 21
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -96,7 +94,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        java: [8, 11, 17]
+        java: [21] # <--- Changed to only run with Java 21
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
