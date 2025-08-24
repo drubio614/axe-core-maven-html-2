@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration; // Ensure Duration is imported
-import com.example.helpers.WebDriverInteractionHelper; // Assuming this helper exists and compiles
+import com.example.helpers.WebDriverInteractionHelper; // Assuming this helpeer exists and compiles
 
 public class DynamicContentTest {
 
