@@ -38,8 +38,12 @@ jobs:
         echo "  </toolchain>" >> ~/.m2/toolchains.xml
         echo "</toolchains>" >> ~/.m2/toolchains.xml
       shell: bash
-    - name: Build with Maven (Running Tests) # Updated step name
-      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml # <--- -DskipTests removed
+    - name: Build with Maven (Running Tests)
+      run: mvn -B package --file pom.xml -t ~/.m2/toolchains.xml
+    - name: List Generated Reports Directory # NEW DEBUG STEP
+      run: ls -R selenium/target/a11y-html-reports || echo "Reports directory not found or empty."
+      shell: bash
+      if: always() # Run this even if previous steps fail, for debugging
     - name: Upload Accessibility Reports
       uses: actions/upload-artifact@v4
       if: always()
