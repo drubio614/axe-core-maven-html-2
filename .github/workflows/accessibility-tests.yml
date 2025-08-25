@@ -46,7 +46,7 @@ jobs:
     - name: Install Node.js dependencies for Selenium # Needed for axe-test-fixtures
       run: npm ci --prefix=selenium
       shell: bash
-    - name: Start Selenium Fixture Server # Starts server for localhost:8001
+    - name: Start Selenium Fixture Server # Start s server for localhost:8001
       run: python -m http.server 8001 &
       working-directory: selenium/node_modules/axe-test-fixtures/fixtures
       shell: bash
