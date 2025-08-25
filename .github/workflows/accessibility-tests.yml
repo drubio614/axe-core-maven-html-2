@@ -43,7 +43,7 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-    - name: Install Node.js dependencies for Selenium # Needed for axe-t e st-fixtures
+    - name: Install Node.js dependencies for Selenium # Needed for a xe-t e st-fixtures
       run: npm ci --prefix=selenium
       shell: bash
     - name: Start Selenium Fixture Server # Start s server for localhost:8001
