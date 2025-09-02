@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <configuration>
                     <!-- Ensure this module compiles with Java 21 using the toolchain -->
                     <release>${java.release.version}</release>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.18.2</version>
+            <version>2.19.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
