@@ -171,7 +171,7 @@ jobs:
         java: [21] # <--- Changed to only run with Java 21
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
       - name: Set up JDK ${{ matrix.java }} and Maven # Need to set up JDK and Maven again for dependent jobs
         uses: actions/setup-java@v4
         with:
